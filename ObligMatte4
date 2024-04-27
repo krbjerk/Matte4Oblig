@@ -1,0 +1,37 @@
+import numpy as np
+import matplotlib.pyplot as plt
+
+L = 100 
+N = 200  #
+dx = L / N 
+dt = 0.05
+T = 5 
+c = 5 
+
+x = np.linspace(-L/2, L/2, N)
+y = np.linspace(-L/2, L/2, N)
+X, Y = np.meshgrid(x, y)
+u = np.zeros((N, N))
+u_new = np.zeros((N, N))
+
+u[int(N/2), int(N/2)] = 1 
+
+plt.figure(figsize=(8, 6))
+for t in np.arange(0, T, dt):
+    for i in range(1, N-1):
+        for j in range(1, N-1):
+            u_new[i, j] = 2*u[i, j] - u_new[i, j] + (c*dt/dx)**2 * (
+                (u[i+1, j] - 2*u[i, j] + u[i-1, j]) +
+                (u[i, j+1] - 2*u[i, j] + u[i, j-1])
+            )
+
+    u, u_new = u_new, u
+    
+    plt.clf()
+    plt.pcolormesh(X, Y, u, shading='auto')
+    plt.colorbar(label='Amplitude')
+    plt.title(f'2D Bølgeligning løsning etter tiden t = {t:.2f}')
+    plt.xlabel('x')
+    plt.ylabel('y')
+    plt.axis('equal')
+    plt.pause(0.01)  
